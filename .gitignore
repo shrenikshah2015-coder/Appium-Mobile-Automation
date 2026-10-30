@@ -1,0 +1,18 @@
+
+# Dependencies
+node_modules/
+
+# Generated test reports
+mochawesome-report/
+
+# Screenshots
+screenshots/
+
+# Environment and secret files
+.env
+.env.*
+!.env.example
+
+# Operating system files
+.DS_Store
+Thumbs.db
