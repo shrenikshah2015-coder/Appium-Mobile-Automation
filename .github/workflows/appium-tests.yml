@@ -28,24 +28,41 @@ jobs:
           arch: x86_64
           profile: pixel_6
           script: |
+           
+          script: |
+            echo "Checking Android emulator"
             adb devices
 
+            echo "Installing Appium"
             npm install -g appium
 
+            echo "Installing UiAutomator2"
             appium driver install uiautomator2
 
+            echo "Starting Appium server"
             appium --address 127.0.0.1 --port 4723 > appium.log 2>&1 &
 
-            for i in {1..30}; do
+            echo "Waiting for Appium server"
+
+            n=1
+            while [ "$n" -le 60 ]; do
               if curl -s http://127.0.0.1:4723/status | grep -q '"ready":true'; then
                 echo "Appium server is ready"
                 break
               fi
+
+              echo "Waiting... attempt $n"
               sleep 2
+              n=$((n + 1))
             done
 
-            curl --fail http://127.0.0.1:4723/status
+            if [ "$n" -gt 60 ]; then
+              echo "Appium server failed to start"
+              cat appium.log
+              exit 1
+            fi
 
+            curl --fail http://127.0.0.1:4723/status
       - name: Upload Appium server logs
         if: always()
         uses: actions/upload-artifact@v4
