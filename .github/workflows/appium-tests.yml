@@ -1,3 +1,4 @@
+
 name: Appium Mobile Automation Tests
 
 on:
@@ -19,5 +20,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check project
-        run: npm run test:mocha
+      - name: Start Android Emulator and Appium
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          script: |
+            adb devices
+
+            npm install -g appium
+
+            appium driver install uiautomator2
+
+            appium --address 127.0.0.1 --port 4723 > appium.log 2>&1 &
+
+            for i in {1..30}; do
+              if curl -s http://127.0.0.1:4723/status | grep -q '"ready":true'; then
+                echo "Appium server is ready"
+                break
+              fi
+              sleep 2
+            done
+
+            curl --fail http://127.0.0.1:4723/status
+
+      - name: Upload Appium server logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-server-logs
+          path: appium.log
+          if-no-files-found: ignore
