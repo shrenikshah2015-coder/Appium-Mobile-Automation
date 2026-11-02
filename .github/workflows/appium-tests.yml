@@ -9,9 +9,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
+      - name: Enable Android emulator hardware acceleration
+        run: |
+          ls -l /dev/kvm
+          sudo chmod 666 /dev/kvm
+          ls -l /dev/kvm
 
+      - name: Checkout source code
+        uses: actions/checkout@v4      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
