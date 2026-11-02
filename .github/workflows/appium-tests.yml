@@ -20,14 +20,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
    
-      - name: Start Android Emulator and Appium
+            - name: Start Android Emulator and Appium
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
           target: google_apis
           arch: x86_64
           profile: pixel_6
+          cores: 2
+          avd-name: test
+          force-avd-creation: true
+          emulator-boot-timeout: 600
+          emulator-port: 5554
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          disable-animations: true
           script: |
+            echo "Checking Android emulator"
+            adb devices
+
             echo "Checking installed calculator applications"
             adb shell pm list packages | grep -i calculator || true
 
