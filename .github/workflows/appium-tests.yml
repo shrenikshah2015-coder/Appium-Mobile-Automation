@@ -28,17 +28,20 @@ jobs:
           arch: x86_64
           profile: pixel_6
           script: |
-            echo "Checking Android emulator"
-            adb devices
             echo "Checking installed calculator applications"
             adb shell pm list packages | grep -i calculator || true
+
             echo "Installing Appium"
             npm install -g appium
+
             echo "Installing UiAutomator2"
             appium driver install uiautomator2
+
             echo "Starting Appium server"
             nohup appium --address 127.0.0.1 --port 4723 > appium.log 2>&1 &
+
             sleep 15
+
             echo "Checking Appium server"
             curl --fail http://127.0.0.1:4723/status
 
