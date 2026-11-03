@@ -45,6 +45,15 @@ jobs:
 
             echo "Checking installed calculator applications"
             adb shell pm list packages | grep -i calculator || true
+      
+            echo "Downloading OpenCalc APK"
+            curl -L --fail -o OpenCalc.apk "https://github.com/clementwzk/OpenCalc/releases/download/v3.2.1/OpenCalc.v3.2.1.apk"
+
+            echo "Installing OpenCalc on Android Emulator"
+            adb install OpenCalc.apk
+
+            echo "Verifying OpenCalc installation"
+            adb shell pm list packages | grep -i opencalc || true            
             echo "Installing Appium"
             npm install -g appium
 
