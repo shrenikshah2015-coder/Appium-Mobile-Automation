@@ -42,6 +42,7 @@ jobs:
           script: |
             export CALCULATOR_PACKAGE=com.darkempire78.opencalculator
             export CALCULATOR_ACTIVITY=.activities.MainActivity
+            export ANDROID_UDID=emulator-5554
             echo "Checking Android emulator"
             adb devices
 
