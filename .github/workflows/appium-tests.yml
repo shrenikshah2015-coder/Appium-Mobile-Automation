@@ -77,6 +77,9 @@ jobs:
             echo "Checking Appium server"
             curl --fail http://127.0.0.1:4723/status
 
+            echo "Checking OpenCalc package details"
+            adb shell dumpsys package com.darkempire78.opencalculator | grep -E 'Activity|MAIN|LAUNCHER'
+
       - name: Upload Appium server logs
         if: always()
         uses: actions/upload-artifact@v4
