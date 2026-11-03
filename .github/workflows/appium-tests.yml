@@ -45,7 +45,6 @@ jobs:
 
             echo "Checking installed calculator applications"
             adb shell pm list packages | grep -i calculator || true
-
             echo "Installing Appium"
             npm install -g appium
 
