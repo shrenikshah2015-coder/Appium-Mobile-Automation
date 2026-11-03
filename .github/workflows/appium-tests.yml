@@ -28,10 +28,10 @@ jobs:
       - name: Start Android Emulator and Appium
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 35
+          api-level: 34
           target: google_apis
           arch: x86_64
-          profile: pixel_6
+          profile: pixel_2
           cores: 2
           avd-name: test
           force-avd-creation: true
