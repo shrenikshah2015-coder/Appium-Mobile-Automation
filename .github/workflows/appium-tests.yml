@@ -80,6 +80,9 @@ jobs:
             echo "Checking OpenCalc package details"
             adb shell dumpsys package com.darkempire78.opencalculator | grep -E 'Activity|MAIN|LAUNCHER'
 
+            echo "Running Appium Mocha tests"
+            npm run test:report
+
       - name: Upload Appium server logs
         if: always()
         uses: actions/upload-artifact@v4
