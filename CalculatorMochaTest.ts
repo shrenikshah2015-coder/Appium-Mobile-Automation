@@ -32,7 +32,14 @@ if (!fs.existsSync(screenshotFolder)) {
 }
         });
 calculator = new CalculatorPage(driver);
+
+// Diagnostic: capture OpenCalc screen elements
+const pageSource = await driver.getPageSource();
+console.log('========== OPENCALC PAGE SOURCE START ==========');
+console.log(pageSource);
+console.log('========== OPENCALC PAGE SOURCE END ==========');
 });
+
 beforeEach(async function () {
         await calculator.clearCalculator();
         console.log('Calculator cleared before test');
