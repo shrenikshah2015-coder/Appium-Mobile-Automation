@@ -21,19 +21,22 @@ if (!fs.existsSync(screenshotFolder)) {
             port: 4723,
             path: '/',
             capabilities: {
-                platformName: 'Android',
-                'appium:automationName': 'UiAutomator2',
-                'appium:udid': 'RZCXB155WGT',
-                'appium:appPackage': 'com.sec.android.app.popupcalculator',
-                'appium:noReset': true
-            }
+            platformName: 'Android',
+            'appium:automationName': 'UiAutomator2',
+            'appium:udid': process.env.ANDROID_UDID || 'RZCXB155WGT',
+
+            'appium:appPackage': process.env.CALCULATOR_PACKAGE || 'com.sec.android.app.popupcalculator',
+            'appium:appActivity': process.env.CALCULATOR_ACTIVITY || '.activities.MainActivity',
+
+            'appium:noReset': true
+}
         });
-        beforeEach(async function () {
-    await calculator.clearCalculator();
-    console.log('Calculator cleared before test');
+calculator = new CalculatorPage(driver);
 });
-        calculator = new CalculatorPage(driver);
-    });
+beforeEach(async function () {
+        await calculator.clearCalculator();
+        console.log('Calculator cleared before test');
+    });   
 
     // Multiplication test
     it('should multiply 9 by 9 and return 81', async function () {
