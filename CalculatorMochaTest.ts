@@ -25,8 +25,7 @@ if (!fs.existsSync(screenshotFolder)) {
             'appium:automationName': 'UiAutomator2',
             'appium:udid': process.env.ANDROID_UDID || 'emulator-5554',
             'appium:appPackage': process.env.CALCULATOR_PACKAGE || 'com.sec.android.app.popupcalculator',
-            'appium:appActivity': process.env.CALCULATOR_ACTIVITY || '.activities.MainActivity',
-
+            'appium:appActivity': process.env.CALCULATOR_ACTIVITY || '.Calculator',
             'appium:noReset': true
 }
         });

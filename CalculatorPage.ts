@@ -3,86 +3,88 @@ import type { Browser } from 'webdriverio';
 
 export class CalculatorPage {
     private driver: Browser;
+    private appPackage: string;
 
     constructor(driver: Browser) {
         this.driver = driver;
+        this.appPackage =
+            process.env.CALCULATOR_PACKAGE ||
+            'com.sec.android.app.popupcalculator';
     }
 
-    // Calculator element locators
-    private number8 = 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_08';
-    private number2 = 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_02';
-    private number9 = 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_09';
+    // Samsung Calculator locators
+    private samsung = {
+        number8: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_08',
+        number2: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_02',
+        number9: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_09',
+        multiply: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_mul',
+        divide: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_div',
+        equals: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_equal',
+        result: 'id=com.sec.android.app.popupcalculator:id/calc_edt_formula',
+        clear: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_clear'
+    };
 
-    // Reusable method to click any Calculator button
-    private async clickButton(locator: string): Promise<void> {
-    await this.driver.$(locator).click();
-}
-   
-    private multiplyButton = 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_mul';
-    private divideButton = 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_div';
-    private equalsButton = 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_equal';
-    private resultField = 'id=com.sec.android.app.popupcalculator:id/calc_edt_formula';
+    // OpenCalc locators will be added after inspecting its page source.
+    private get locators() {
+        if (this.appPackage === 'com.sec.android.app.popupcalculator') {
+            return this.samsung;
+        }
 
-    // Perform multiplication: 9 × 9
-    async multiplyNineByNine(): Promise<void> {
-    await this.clickButton(this.number9);
-    await this.clickButton(this.multiplyButton);
-    await this.clickButton(this.number9);
-    await this.clickButton(this.equalsButton);
-}
-
-    // Perform division: 8 ÷ 2
-    async divideEightByTwo(): Promise<void> {
-    await this.clickButton(this.number8);
-    await this.clickButton(this.divideButton);
-    await this.clickButton(this.number2);
-    await this.clickButton(this.equalsButton);
-}
-
-    // Read the displayed result
-    async getResult(): Promise<string> {
-        const resultElement = await this.driver.$(this.resultField);
-        return await resultElement.getText();
-    }
-  
-    
-    // Verify the displayed result exactly
-    
-async verifyResult(expected: string): Promise<void> {
-    const actual = await this.getResult();
-
-    // Check whether the result starts with the expected value
-    const actualResult = actual.trim().split(' ')[0];
-
-    if (actualResult === expected) {
-        console.log(`PASS: Expected result ${expected}`);
-    } else {
         throw new Error(
-            `FAIL: Expected ${expected}, but got ${actual}`
+            `Locators have not yet been configured for ${this.appPackage}`
         );
     }
-}
-   
 
-    // Close the Calculator app
+    private async clickButton(locator: string): Promise<void> {
+        await this.driver.$(locator).click();
+    }
+
+    async multiplyNineByNine(): Promise<void> {
+        const locators = this.locators;
+        await this.clickButton(locators.number9);
+        await this.clickButton(locators.multiply);
+        await this.clickButton(locators.number9);
+        await this.clickButton(locators.equals);
+    }
+
+    async divideEightByTwo(): Promise<void> {
+        const locators = this.locators;
+        await this.clickButton(locators.number8);
+        await this.clickButton(locators.divide);
+        await this.clickButton(locators.number2);
+        await this.clickButton(locators.equals);
+    }
+
+    async getResult(): Promise<string> {
+        const resultElement = await this.driver.$(this.locators.result);
+        return await resultElement.getText();
+    }
+
+    async verifyResult(expected: string): Promise<void> {
+        const actual = await this.getResult();
+        const actualResult = actual.trim().split(' ')[0];
+
+        if (actualResult === expected) {
+            console.log(`PASS: Expected result ${expected}`);
+        } else {
+            throw new Error(`FAIL: Expected ${expected}, but got ${actual}`);
+        }
+    }
+
+    async clearCalculator(): Promise<void> {
+        const clearButton = await this.driver.$(this.locators.clear);
+
+        if (await clearButton.isExisting()) {
+            await clearButton.click();
+            console.log('Calculator cleared successfully');
+        } else {
+            console.log('Clear button not available');
+        }
+    }
+
     async closeCalculator(): Promise<void> {
         await this.driver.execute('mobile: terminateApp', {
-            appId: 'com.sec.android.app.popupcalculator'
+            appId: this.appPackage
         });
     }
-
-// Clear the calculator before a new calculation
-
-async clearCalculator(): Promise<void> {
-    const clearButton = await this.driver.$(
-        'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_clear'
-    );
-
-    if (await clearButton.isExisting()) {
-        await clearButton.click();
-        console.log('Calculator cleared successfully');
-    } else {
-        console.log('Clear button not available');
-    }
-}
 }
