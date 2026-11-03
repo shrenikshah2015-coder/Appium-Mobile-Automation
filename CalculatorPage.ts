@@ -25,17 +25,26 @@ export class CalculatorPage {
         clear: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_clear'
     };
 
-    // OpenCalc locators will be configured after inspecting its page source.
+    // OpenCalc resource IDs - captured from Appium page source
+    private openCalc = {
+        number8: 'id=com.darkempire78.opencalculator:id/eightButton',
+        number2: 'id=com.darkempire78.opencalculator:id/twoButton',
+        number9: 'id=com.darkempire78.opencalculator:id/nineButton',
+        multiply: 'id=com.darkempire78.opencalculator:id/multiplyButton',
+        divide: 'id=com.darkempire78.opencalculator:id/divideButton',
+        equals: 'id=com.darkempire78.opencalculator:id/equalsButton',
+        result: 'id=com.darkempire78.opencalculator:id/resultDisplay',
+        clear: 'id=com.darkempire78.opencalculator:id/clearButton'
+    };
+
+    // Select locators based on the configured application
     private get locators() {
         if (this.appPackage === 'com.sec.android.app.popupcalculator') {
             return this.samsung;
         }
 
         if (this.appPackage === 'com.darkempire78.opencalculator') {
-            throw new Error(
-                'OpenCalc locators are not configured yet. ' +
-                'Please inspect the OpenCalc page source first.'
-            );
+            return this.openCalc;
         }
 
         throw new Error(`Unsupported calculator package: ${this.appPackage}`);
@@ -87,13 +96,10 @@ export class CalculatorPage {
 
     async clearCalculator(): Promise<void> {
         const clearButton = await this.driver.$(this.locators.clear);
+        await clearButton.waitForDisplayed({ timeout: 10000 });
+        await clearButton.click();
 
-        if (await clearButton.isExisting()) {
-            await clearButton.click();
-            console.log('Calculator cleared successfully');
-        } else {
-            console.log('Clear button not available');
-        }
+        console.log('Calculator cleared successfully');
     }
 
     async closeCalculator(): Promise<void> {
