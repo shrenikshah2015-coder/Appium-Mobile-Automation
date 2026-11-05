@@ -1,4 +1,3 @@
-
 import { remote } from 'webdriverio';
 
 async function main() {
@@ -21,15 +20,12 @@ async function main() {
 
     await driver.pause(2000);
 
-    // Print the current screen hierarchy
     const source = await driver.getPageSource();
     console.log('SCREEN HIERARCHY:\n', source);
 
-    // Find elements using the actual resource IDs in the hierarchy
-    const elements = await driver.$$('//*[
-      contains(@resource-id, "search")
-      or contains(@class, "EditText")
-    ]');
+    const elements = await driver.$$(
+      '//*[contains(@resource-id, "search") or contains(@class, "EditText")]'
+    );
 
     console.log('Search-related elements:', elements.length);
 
@@ -50,4 +46,3 @@ main().catch((error) => {
   console.error('Test failed:', error);
   process.exitCode = 1;
 });
- 

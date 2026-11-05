@@ -25,7 +25,7 @@ export class CalculatorPage {
         clear: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_clear'
     };
 
-    // OpenCalc resource IDs - captured from Appium page source
+    // OpenCalc resource IDs
     private openCalc = {
         number8: 'id=com.darkempire78.opencalculator:id/eightButton',
         number2: 'id=com.darkempire78.opencalculator:id/twoButton',
@@ -34,6 +34,7 @@ export class CalculatorPage {
         divide: 'id=com.darkempire78.opencalculator:id/divideButton',
         equals: 'id=com.darkempire78.opencalculator:id/equalsButton',
         result: 'id=com.darkempire78.opencalculator:id/resultDisplay',
+        input: 'id=com.darkempire78.opencalculator:id/input',
         clear: 'id=com.darkempire78.opencalculator:id/clearButton'
     };
 
@@ -50,54 +51,71 @@ export class CalculatorPage {
         throw new Error(`Unsupported calculator package: ${this.appPackage}`);
     }
 
+    // Reusable button click method
     private async clickButton(locator: string): Promise<void> {
-    console.log(`Attempting to click: ${locator}`);
+        console.log(`Attempting to click: ${locator}`);
 
-    const element = await this.driver.$(locator);
+        const element = await this.driver.$(locator);
 
-    await element.waitForDisplayed({ timeout: 10000 });
+        await element.waitForDisplayed({ timeout: 10000 });
 
-    console.log(`Button displayed: ${locator}`);
+        console.log(`Button displayed: ${locator}`);
 
-    await element.click();
+        await element.click();
 
-    console.log(`Button clicked successfully: ${locator}`);
-}
+        console.log(`Button clicked successfully: ${locator}`);
+    }
 
-   async multiplyNineByNine(): Promise<void> {
-    const locators = this.locators;
+    // Test calculation: 9 x 9 = 81
+    async multiplyNineByNine(): Promise<void> {
+        const locators = this.locators;
 
-    console.log('STEP 1: Clicking number 9');
-    await this.clickButton(locators.number9);
-    const screenshot = await this.driver.takeScreenshot();
-    require('fs').writeFileSync('step1-calculator.png', screenshot, 'base64');
-    console.log('STEP 1 screenshot saved');
-    console.log('Screen after first 9:', await this.driver.getPageSource());
+        console.log('STEP 1: Clicking number 9');
+        await this.clickButton(locators.number9);
 
-    console.log('STEP 2: Clicking multiplication');
-    await this.clickButton(locators.multiply);
-    
-    const screenshot2 = await this.driver.takeScreenshot();
-    require('fs').writeFileSync('step2-calculator.png', screenshot2, 'base64');
-    console.log('STEP 2 screenshot saved');
+        const screenshot = await this.driver.takeScreenshot();
+        require('fs').writeFileSync(
+            'step1-calculator.png',
+            screenshot,
+            'base64'
+        );
+        console.log('STEP 1 screenshot saved');
 
-    console.log('Screen after multiplication:', await this.driver.getPageSource());
+        console.log('STEP 2: Clicking multiplication');
+        await this.clickButton(locators.multiply);
 
-    console.log('STEP 3: Clicking second number 9');
-    await this.clickButton(locators.number9);
-    const screenshot3 = await this.driver.takeScreenshot();
-    require('fs').writeFileSync('step3-calculator.png', screenshot3, 'base64');
-    console.log('STEP 3 screenshot saved');
-    console.log('Screen after second 9:', await this.driver.getPageSource());
+        const screenshot2 = await this.driver.takeScreenshot();
+        require('fs').writeFileSync(
+            'step2-calculator.png',
+            screenshot2,
+            'base64'
+        );
+        console.log('STEP 2 screenshot saved');
 
-    console.log('STEP 4: Clicking equals');
-    await this.clickButton(locators.equals);
-    const screenshot4 = await this.driver.takeScreenshot();
-    require('fs').writeFileSync('step4-calculator.png', screenshot4, 'base64');
-    console.log('STEP 4 screenshot saved');
-    console.log('Screen after equals:', await this.driver.getPageSource());
-}
+        console.log('STEP 3: Clicking second number 9');
+        await this.clickButton(locators.number9);
 
+        const screenshot3 = await this.driver.takeScreenshot();
+        require('fs').writeFileSync(
+            'step3-calculator.png',
+            screenshot3,
+            'base64'
+        );
+        console.log('STEP 3 screenshot saved');
+
+        console.log('STEP 4: Clicking equals');
+        await this.clickButton(locators.equals);
+
+        const screenshot4 = await this.driver.takeScreenshot();
+        require('fs').writeFileSync(
+            'step4-calculator.png',
+            screenshot4,
+            'base64'
+        );
+        console.log('STEP 4 screenshot saved');
+    }
+
+    // Test calculation: 8 / 2 = 4
     async divideEightByTwo(): Promise<void> {
         const locators = this.locators;
 
@@ -107,37 +125,25 @@ export class CalculatorPage {
         await this.clickButton(locators.equals);
     }
 
+    // Read the calculator result
     async getResult(): Promise<string> {
-    const resultElement = await this.driver.$(this.locators.result);
-    
-    const inputElement = await this.driver.$(
-    'id=com.darkempire78.opencalculator:id/input'
-);
+        const resultLocator =
+            this.appPackage === 'com.darkempire78.opencalculator'
+                ? this.openCalc.input
+                : this.samsung.result;
 
-    console.log('RESULT DISPLAY getText:', await resultElement.getText());
-    console.log('RESULT DISPLAY text:', await resultElement.getAttribute('text'));
+        const resultElement = await this.driver.$(resultLocator);
 
-    console.log('INPUT getText:', await inputElement.getText());
-    console.log('INPUT text:', await inputElement.getAttribute('text'));
-    console.log('INPUT content-desc:', await inputElement.getAttribute('content-desc'));
+        await resultElement.waitForDisplayed({ timeout: 10000 });
 
-    await resultElement.waitForDisplayed({ timeout: 10000 });
+        const actualText = await resultElement.getText();
 
-    const text = await resultElement.getText();
-    const attributeText = await resultElement.getAttribute('text');
-    const contentDescription = await resultElement.getAttribute('content-desc');
+        console.log('Calculator result:', actualText);
 
-    console.log('========== CALCULATOR RESULT DEBUG ==========');
-    console.log('getText():', text);
-    console.log('Text attribute:', attributeText);
-    console.log('Content description:', contentDescription);
-    console.log('========== CURRENT APP PAGE SOURCE ==========');
-    console.log(await this.driver.getPageSource());
-    console.log('=============================================');
+        return actualText.trim();
+    }
 
-    return (text || attributeText || contentDescription || '').trim();
-}
-
+    // Verify expected calculation result
     async verifyResult(expected: string): Promise<void> {
         const actual = await this.getResult();
         const actualResult = actual.split(' ')[0];
@@ -151,14 +157,17 @@ export class CalculatorPage {
         }
     }
 
+    // Clear calculator
     async clearCalculator(): Promise<void> {
         const clearButton = await this.driver.$(this.locators.clear);
+
         await clearButton.waitForDisplayed({ timeout: 10000 });
         await clearButton.click();
 
         console.log('Calculator cleared successfully');
     }
 
+    // Close calculator
     async closeCalculator(): Promise<void> {
         await this.driver.execute('mobile: terminateApp', {
             appId: this.appPackage
