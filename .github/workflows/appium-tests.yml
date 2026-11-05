@@ -1,4 +1,4 @@
-
+```yaml
 name: Appium Mobile Automation Tests
 
 on:
@@ -16,7 +16,8 @@ jobs:
           ls -l /dev/kvm
 
       - name: Checkout source code
-        uses: actions/checkout@v4      
+        uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -24,7 +25,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-   
+
       - name: Start Android Emulator and Appium
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -43,12 +44,13 @@ jobs:
             export CALCULATOR_PACKAGE=com.darkempire78.opencalculator
             export CALCULATOR_ACTIVITY=.activities.MainActivity
             export ANDROID_UDID=emulator-5554
+
             echo "Checking Android emulator"
             adb devices
 
             echo "Checking installed calculator applications"
             adb shell pm list packages | grep -i calculator || true
-      
+
             echo "Downloading OpenCalc APK"
             curl -L --fail -o OpenCalc.apk "https://github.com/clementwzk/OpenCalc/releases/download/v3.2.1/OpenCalc.v3.2.1.apk"
 
@@ -56,13 +58,11 @@ jobs:
             adb install OpenCalc.apk
 
             echo "Verifying OpenCalc installation"
-            adb shell pm list packages | grep -i opencalc || true    
-
-            echo "Verifying OpenCalc installation"
             adb shell pm list packages | grep -i opencalc || true
 
             echo "Checking OpenCalc launch activity"
             adb shell cmd package resolve-activity --brief com.darkempire78.opencalculator
+
             echo "Installing Appium"
             npm install -g appium
 
@@ -90,3 +90,12 @@ jobs:
           name: appium-server-logs
           path: appium.log
           if-no-files-found: ignore
+
+      - name: Upload calculator screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculator-screenshots
+          path: step1-calculator.png
+          if-no-files-found: warn
+```
