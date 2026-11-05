@@ -75,11 +75,24 @@ export class CalculatorPage {
     }
 
     async getResult(): Promise<string> {
-        const resultElement = await this.driver.$(this.locators.result);
-        await resultElement.waitForDisplayed({ timeout: 10000 });
+    const resultElement = await this.driver.$(this.locators.result);
 
-        return (await resultElement.getText()).trim();
-    }
+    await resultElement.waitForDisplayed({ timeout: 10000 });
+
+    const text = await resultElement.getText();
+    const attributeText = await resultElement.getAttribute('text');
+    const contentDescription = await resultElement.getAttribute('content-desc');
+
+    console.log('========== CALCULATOR RESULT DEBUG ==========');
+    console.log('getText():', text);
+    console.log('Text attribute:', attributeText);
+    console.log('Content description:', contentDescription);
+    console.log('========== CURRENT APP PAGE SOURCE ==========');
+    console.log(await this.driver.getPageSource());
+    console.log('=============================================');
+
+    return (text || attributeText || contentDescription || '').trim();
+}
 
     async verifyResult(expected: string): Promise<void> {
         const actual = await this.getResult();
