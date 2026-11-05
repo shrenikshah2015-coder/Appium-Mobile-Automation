@@ -76,6 +76,11 @@ export class CalculatorPage {
 
     console.log('STEP 2: Clicking multiplication');
     await this.clickButton(locators.multiply);
+    
+    const screenshot2 = await this.driver.takeScreenshot();
+    require('fs').writeFileSync('step2-calculator.png', screenshot2, 'base64');
+    console.log('STEP 2 screenshot saved');
+
     console.log('Screen after multiplication:', await this.driver.getPageSource());
 
     console.log('STEP 3: Clicking second number 9');

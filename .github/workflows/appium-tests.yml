@@ -95,5 +95,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: calculator-screenshots
-          path: step1-calculator.png
+          path: step*-calculator.png
           if-no-files-found: warn
