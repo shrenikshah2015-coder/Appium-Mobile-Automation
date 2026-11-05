@@ -51,19 +51,38 @@ export class CalculatorPage {
     }
 
     private async clickButton(locator: string): Promise<void> {
-        const element = await this.driver.$(locator);
-        await element.waitForDisplayed({ timeout: 10000 });
-        await element.click();
-    }
+    console.log(`Attempting to click: ${locator}`);
 
-    async multiplyNineByNine(): Promise<void> {
-        const locators = this.locators;
+    const element = await this.driver.$(locator);
 
-        await this.clickButton(locators.number9);
-        await this.clickButton(locators.multiply);
-        await this.clickButton(locators.number9);
-        await this.clickButton(locators.equals);
-    }
+    await element.waitForDisplayed({ timeout: 10000 });
+
+    console.log(`Button displayed: ${locator}`);
+
+    await element.click();
+
+    console.log(`Button clicked successfully: ${locator}`);
+}
+
+   async multiplyNineByNine(): Promise<void> {
+    const locators = this.locators;
+
+    console.log('STEP 1: Clicking number 9');
+    await this.clickButton(locators.number9);
+    console.log('Screen after first 9:', await this.driver.getPageSource());
+
+    console.log('STEP 2: Clicking multiplication');
+    await this.clickButton(locators.multiply);
+    console.log('Screen after multiplication:', await this.driver.getPageSource());
+
+    console.log('STEP 3: Clicking second number 9');
+    await this.clickButton(locators.number9);
+    console.log('Screen after second 9:', await this.driver.getPageSource());
+
+    console.log('STEP 4: Clicking equals');
+    await this.clickButton(locators.equals);
+    console.log('Screen after equals:', await this.driver.getPageSource());
+}
 
     async divideEightByTwo(): Promise<void> {
         const locators = this.locators;
