@@ -109,6 +109,17 @@ export class CalculatorPage {
 
     async getResult(): Promise<string> {
     const resultElement = await this.driver.$(this.locators.result);
+    
+    const inputElement = await this.driver.$(
+    'id=com.darkempire78.opencalculator:id/input'
+);
+
+    console.log('RESULT DISPLAY getText:', await resultElement.getText());
+    console.log('RESULT DISPLAY text:', await resultElement.getAttribute('text'));
+
+    console.log('INPUT getText:', await inputElement.getText());
+    console.log('INPUT text:', await inputElement.getAttribute('text'));
+    console.log('INPUT content-desc:', await inputElement.getAttribute('content-desc'));
 
     await resultElement.waitForDisplayed({ timeout: 10000 });
 
