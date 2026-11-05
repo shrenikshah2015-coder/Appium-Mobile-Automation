@@ -85,10 +85,16 @@ export class CalculatorPage {
 
     console.log('STEP 3: Clicking second number 9');
     await this.clickButton(locators.number9);
+    const screenshot3 = await this.driver.takeScreenshot();
+    require('fs').writeFileSync('step3-calculator.png', screenshot3, 'base64');
+    console.log('STEP 3 screenshot saved');
     console.log('Screen after second 9:', await this.driver.getPageSource());
 
     console.log('STEP 4: Clicking equals');
     await this.clickButton(locators.equals);
+    const screenshot4 = await this.driver.takeScreenshot();
+    require('fs').writeFileSync('step4-calculator.png', screenshot4, 'base64');
+    console.log('STEP 4 screenshot saved');
     console.log('Screen after equals:', await this.driver.getPageSource());
 }
 
