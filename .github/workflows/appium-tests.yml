@@ -97,3 +97,11 @@ jobs:
           name: calculator-screenshots
           path: step*-calculator.png
           if-no-files-found: warn
+
+      - name: Upload Mochawesome HTML report
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: mochawesome-html-report
+            path: mochawesome-report/
+            if-no-files-found: warn
