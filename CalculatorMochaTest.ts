@@ -65,35 +65,50 @@ describe('Calculator Tests', function () {
         console.log('Calculator cleared before test');
     });
 
-    // Multiplication test
-    it('should multiply 9 by 9 and return 81', async function () {
-        console.log('Test: 9 × 9 = 81');
+  // Test data for calculator operations
+  const testCases = [
+      {
+          title: 'should multiply 9 by 9 and return 81',
+          execute: () => calculator.multiplyNineByNine(),
+          expected: '81'
+      },
+      {
+          title: 'should divide 8 by 2 and return 4',
+          execute: () => calculator.divideEightByTwo(),
+          expected: '4'
+      }
+  ];
 
-        await calculator.multiplyNineByNine();
-        await calculator.verifyResult('81');
-    });
+  // Execute each test case using the same test structure
+  testCases.forEach((testCase) => {
+      it(testCase.title, async function () {
+          console.log(`Running: ${testCase.title}`);
 
-    // Division test
-    it('should divide 8 by 2 and return 4', async function () {
-        console.log('Test: 8 ÷ 2 = 4');
+          await testCase.execute();
+          await calculator.verifyResult(testCase.expected);
+      });
+  });
 
-        await calculator.divideEightByTwo();
-        await calculator.verifyResult('4');
-    });
-
-    // Capture screenshot when a test fails
+    // Capture screenshot automatically when a test fails
     afterEach(async function () {
-        if (this.currentTest?.state === 'failed' && driver) {
+    if (this.currentTest?.state === 'failed' && driver) {
+        try {
             const screenshot = await driver.takeScreenshot();
 
-            const fileName = `failure-${Date.now()}.png`;
+            const testName = this.currentTest.title
+                .replace(/[^a-zA-Z0-9-_]/g, '_');
+
+            const fileName = `failure-${testName}-${Date.now()}.png`;
             const filePath = `${screenshotFolder}/${fileName}`;
 
             fs.writeFileSync(filePath, screenshot, 'base64');
 
             console.log(`Failure screenshot saved: ${filePath}`);
+        } catch (error) {
+            console.error('Failed to capture failure screenshot:', error);
         }
-    });
+    }
+});
 
     // Close the Appium session after all tests
     after(async function () {
