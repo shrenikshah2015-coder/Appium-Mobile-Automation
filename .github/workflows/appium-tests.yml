@@ -28,6 +28,12 @@ jobs:
 
       - name: Start Android Emulator and Appium
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          PLATFORM_NAME: Android
+          DEVICE_NAME: "Android Emulator"
+          ANDROID_UDID: emulator-5554
+          CALCULATOR_PACKAGE: com.darkempire78.opencalculator
+          CALCULATOR_ACTIVITY: .activities.MainActivity
         with:
           api-level: 34
           target: google_apis
@@ -41,17 +47,8 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
           script: |
-            # Set Android emulator configuration
-            export ENV_FILE=.env.emulator
-            export PLATFORM_NAME=Android
-            export DEVICE_NAME="Android Emulator"
-            export ANDROID_UDID=emulator-5554
-            export CALCULATOR_PACKAGE=com.darkempire78.opencalculator
-            export CALCULATOR_ACTIVITY=.activities.MainActivity
-
             # Display configuration for verification
             echo "========== CI CONFIGURATION CHECK =========="
-            echo "ENV_FILE=$ENV_FILE"
             echo "PLATFORM_NAME=$PLATFORM_NAME"
             echo "DEVICE_NAME=$DEVICE_NAME"
             echo "ANDROID_UDID=$ANDROID_UDID"
