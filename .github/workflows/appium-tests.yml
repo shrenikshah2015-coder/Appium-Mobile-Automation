@@ -40,6 +40,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
           script: |
+            export ENV_FILE=.env.emulator
             export CALCULATOR_PACKAGE=com.darkempire78.opencalculator
             export CALCULATOR_ACTIVITY=.activities.MainActivity
             export ANDROID_UDID=emulator-5554
