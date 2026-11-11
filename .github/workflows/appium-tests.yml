@@ -1,3 +1,4 @@
+
 name: Appium Mobile Automation Tests
 
 on:
@@ -40,10 +41,22 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
           script: |
+            # Set Android emulator configuration
             export ENV_FILE=.env.emulator
+            export PLATFORM_NAME=Android
+            export DEVICE_NAME="Android Emulator"
+            export ANDROID_UDID=emulator-5554
             export CALCULATOR_PACKAGE=com.darkempire78.opencalculator
             export CALCULATOR_ACTIVITY=.activities.MainActivity
-            export ANDROID_UDID=emulator-5554
+
+            # Display configuration for verification
+            echo "========== CI CONFIGURATION CHECK =========="
+            echo "ENV_FILE=$ENV_FILE"
+            echo "PLATFORM_NAME=$PLATFORM_NAME"
+            echo "DEVICE_NAME=$DEVICE_NAME"
+            echo "ANDROID_UDID=$ANDROID_UDID"
+            echo "CALCULATOR_PACKAGE=$CALCULATOR_PACKAGE"
+            echo "CALCULATOR_ACTIVITY=$CALCULATOR_ACTIVITY"
 
             echo "Checking Android emulator"
             adb devices
