@@ -17,9 +17,14 @@ export class CalculatorPage {
     private samsung = {
         number8: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_08',
         number2: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_02',
+        number5: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_05',
+        number3: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_03',
+        number4: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_04',
         number9: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_09',
         multiply: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_mul',
         divide: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_div',
+        add: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_add',
+        subtract: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_sub',
         equals: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_equal',
         result: 'id=com.sec.android.app.popupcalculator:id/calc_edt_formula',
         clear: 'id=com.sec.android.app.popupcalculator:id/calc_keypad_btn_clear'
@@ -29,9 +34,14 @@ export class CalculatorPage {
     private openCalc = {
         number8: 'id=com.darkempire78.opencalculator:id/eightButton',
         number2: 'id=com.darkempire78.opencalculator:id/twoButton',
+        number5: 'id=com.darkempire78.opencalculator:id/fiveButton',
+        number3: 'id=com.darkempire78.opencalculator:id/threeButton',
+        number4: 'id=com.darkempire78.opencalculator:id/fourButton',
         number9: 'id=com.darkempire78.opencalculator:id/nineButton',
         multiply: 'id=com.darkempire78.opencalculator:id/multiplyButton',
         divide: 'id=com.darkempire78.opencalculator:id/divideButton',
+        add: 'id=com.darkempire78.opencalculator:id/addButton',
+        subtract: 'id=com.darkempire78.opencalculator:id/subtractButton',
         equals: 'id=com.darkempire78.opencalculator:id/equalsButton',
         result: 'id=com.darkempire78.opencalculator:id/resultDisplay',
         input: 'id=com.darkempire78.opencalculator:id/input',
@@ -124,6 +134,26 @@ export class CalculatorPage {
         await this.clickButton(locators.number2);
         await this.clickButton(locators.equals);
     }
+
+// Test calculation: 5 + 3 = 8
+    async addFiveAndThree(): Promise<void> {
+        const locators = this.locators;
+
+        await this.clickButton(locators.number5);
+        await this.clickButton(locators.add);
+        await this.clickButton(locators.number3);
+        await this.clickButton(locators.equals);
+}
+
+    // Test calculation: 9 - 4 = 5
+    async subtractNineAndFour(): Promise<void> {
+        const locators = this.locators;
+
+        await this.clickButton(locators.number9);
+        await this.clickButton(locators.subtract);
+        await this.clickButton(locators.number4);
+        await this.clickButton(locators.equals);
+}
 
     // Read the calculator result
     async getResult(): Promise<string> {

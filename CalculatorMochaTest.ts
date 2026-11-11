@@ -66,18 +66,28 @@ describe('Calculator Tests', function () {
     });
 
   // Test data for calculator operations
-  const testCases = [
-      {
-          title: 'should multiply 9 by 9 and return 81',
-          execute: () => calculator.multiplyNineByNine(),
-          expected: '81'
-      },
-      {
-          title: 'should divide 8 by 2 and return 4',
-          execute: () => calculator.divideEightByTwo(),
-          expected: '4'
-      }
-  ];
+const testCases = [
+    {
+        title: 'should multiply 9 by 9 and return 81',
+        execute: () => calculator.multiplyNineByNine(),
+        expected: '81'
+    },
+    {
+        title: 'should divide 8 by 2 and return 4',
+        execute: () => calculator.divideEightByTwo(),
+        expected: '4'
+    },
+    {
+        title: 'should add 5 and 3 and return 8',
+        execute: () => calculator.addFiveAndThree(),
+        expected: '8'
+    },
+    {
+        title: 'should subtract 4 from 9 and return 5',
+        execute: () => calculator.subtractNineAndFour(),
+        expected: '5'
+    }
+];
 
   // Execute each test case using the same test structure
   testCases.forEach((testCase) => {
