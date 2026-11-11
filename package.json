@@ -6,13 +6,14 @@
   "main": "index.js",
   "scripts": {
     "test:mocha": "mocha --require tsx/cjs CalculatorMochaTest.ts",
-      "test:report": "mocha --require tsx/cjs CalculatorMochaTest.ts --reporter mochawesome"
+    "test:report": "mocha --require tsx/cjs CalculatorMochaTest.ts --reporter mochawesome"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "dotenv": "^18.0.10",
     "webdriverio": "^10.1.0"
   },
   "devDependencies": {
