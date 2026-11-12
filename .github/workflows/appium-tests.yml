@@ -1,3 +1,4 @@
+
 name: Appium Mobile Automation Tests
 
 on:
@@ -90,9 +91,7 @@ jobs:
 
             echo "Running Appium Mocha tests"
 
-            if npm run test:report; then
-              echo "Appium tests completed successfully"
-            else
+            npm run test:report || {
               TEST_EXIT_CODE=$?
 
               echo "=========================================="
@@ -111,7 +110,9 @@ jobs:
               echo "Diagnostic collection completed"
 
               exit "$TEST_EXIT_CODE"
-            fi
+            }
+
+            echo "Appium tests completed successfully"
 
       - name: Upload Appium server logs
         if: always()
