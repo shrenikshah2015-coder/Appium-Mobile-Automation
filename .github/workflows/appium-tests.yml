@@ -1,4 +1,3 @@
-
 name: Appium Mobile Automation Tests
 
 on:
@@ -47,7 +46,6 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
           script: |
-            # Display configuration for verification
             echo "========== CI CONFIGURATION CHECK =========="
             echo "PLATFORM_NAME=$PLATFORM_NAME"
             echo "DEVICE_NAME=$DEVICE_NAME"
@@ -91,7 +89,29 @@ jobs:
             adb shell dumpsys package com.darkempire78.opencalculator | grep -E 'Activity|MAIN|LAUNCHER'
 
             echo "Running Appium Mocha tests"
-            npm run test:report
+
+            if npm run test:report; then
+              echo "Appium tests completed successfully"
+            else
+              TEST_EXIT_CODE=$?
+
+              echo "=========================================="
+              echo "APPIUM TEST FAILURE - COLLECTING DIAGNOSTICS"
+              echo "=========================================="
+
+              echo "Capturing Android Logcat"
+              adb logcat -d -t 1000 > android-logcat.txt || true
+
+              echo "Capturing Android activity information"
+              adb shell dumpsys activity activities > android-activities.txt || true
+
+              echo "Capturing Appium server log"
+              tail -n 200 appium.log || true
+
+              echo "Diagnostic collection completed"
+
+              exit "$TEST_EXIT_CODE"
+            fi
 
       - name: Upload Appium server logs
         if: always()
@@ -108,6 +128,16 @@ jobs:
           name: calculator-screenshots
           path: step*-calculator.png
           if-no-files-found: warn
+
+      - name: Upload Android diagnostic logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-diagnostic-logs
+          path: |
+            android-logcat.txt
+            android-activities.txt
+          if-no-files-found: ignore
 
       - name: Upload Mochawesome HTML report
         if: always()
