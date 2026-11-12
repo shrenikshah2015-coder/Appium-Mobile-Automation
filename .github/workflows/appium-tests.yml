@@ -1,4 +1,3 @@
-
 name: Appium Mobile Automation Tests
 
 on:
@@ -47,6 +46,30 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
           script: |
+            echo "========== CI CONFIGURATION CHECK =========="
+            echo "PLATFORM_NAME=$PLATFORM_NAME"
+            echo "DEVICE_NAME=$DEVICE_NAME"
+            echo "ANDROID_UDID=$ANDROID_UDID"
+            echo "CALCULATOR_PACKAGE=$CALCULATOR_PACKAGE"
+            echo "CALCULATOR_ACTIVITY=$CALCULATOR_ACTIVITY"
+            echo "Checking Android emulator"
+            adb devices
+            echo "Downloading OpenCalc APK"
+            curl -L --fail --retry 3 --retry-delay 2 -o OpenCalc.v3.2.1.apk https://github.com/clementwzk/OpenCalc/releases/download/v3.2.1/OpenCalc.v3.2.1.apk
+            echo "Installing OpenCalc APK"
+            adb install -r OpenCalc.v3.2.1.apk
+            echo "Resolving calculator activity"
+            adb shell cmd package resolve-activity --brief "$CALCULATOR_PACKAGE"
+            echo "Installing Appium"
+            npm install -g appium
+            echo "Installing UiAutomator2 driver"
+            appium driver install uiautomator2
+            echo "Starting Appium server"
+            nohup appium --address 127.0.0.1 --port 4723 > appium.log 2>&1 < /dev/null &
+            sleep 15
+            echo "Checking Appium server status"
+            curl --fail http://127.0.0.1:4723/status
+            echo "Running Appium tests with failure diagnostics"
             bash run-appium-tests.sh
 
       - name: Upload Appium server logs
